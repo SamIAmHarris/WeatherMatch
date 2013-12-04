@@ -211,7 +211,7 @@ public class WeatherMatch extends Fragment implements LocationListener{
         catch (ClassCastException e){
             //tell you in the log why it failed. That this interface was not implemented
             throw new ClassCastException(activity.toString() +
-                    "must implement OnHeadSelectedListener");
+                    "must implement OnDaySelectedListener");
         }
     }
 
