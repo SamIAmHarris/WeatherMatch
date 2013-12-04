@@ -45,16 +45,12 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.details, container, false);
-
-        return rootView;
-
         //making sure that there is not a pre-existing state. Like the screen was just flipped sideways
         if(savedInstanceState !=null) {
             //setting the current position to that saved instance state. so that if there was a previous state
             //we will know what its position was and that will be passed further down in the code
             mCurrentPosition = savedInstanceState.getInt((ARG_POSITION));
-        }
+         }
         //inflating the view for this fragment. the layout article_fragment
         View thisFragmentView = inflater.inflate(R.layout.details, container, false);
 

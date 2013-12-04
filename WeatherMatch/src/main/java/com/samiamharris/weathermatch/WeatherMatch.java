@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -99,6 +100,7 @@ public class WeatherMatch extends Fragment implements LocationListener{
 
         mListView = (ListView) getView().findViewById(R.id.list_view);
         if(mListView != null) {
+            mListView.setOnItemClickListener(mOnClickListener);
             mListView.setAdapter(mWeatherAdapter);
         }
     }
@@ -215,14 +217,17 @@ public class WeatherMatch extends Fragment implements LocationListener{
         }
     }
 
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    final private AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
 
-        //setting the mcallback position once the article is selected
-        mCallback.onDaySelected(position);
-        //setting the item checked - meaning it has been clicked on so can't keep clicking
-        l.setItemChecked(position, true);
+        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            //setting the mcallback position once the article is selected
+            mCallback.onDaySelected(position);
+            //setting the item checked - meaning it has been clicked on so can't keep clicking
+            mListView.setItemChecked(position, true);
+        }
+    };
 
-    }
+
 
     public interface OnDaySelectedListener {
         /** Called by Weather Match Fragment when a list item is selected */
