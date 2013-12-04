@@ -11,17 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDaySelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
+        if(findViewById(R.id.container) != null) {
+            if(savedInstanceState != null) {
+                return;
+            }
+
+            WeatherMatch weatherMatchFragment = new WeatherMatch();
+            weatherMatchFragment.setArguments(getIntent().getExtras());
+
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new WeatherMatch())
+                    .replace(R.id.container, weatherMatchFragment)
+                    .addToBackStack(null)
                     .commit();
+
         }
     }
 
@@ -47,31 +57,34 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    public void onDaySelected(int position) {
+        // The user selected the headline of an article from the HeadlinesFragment
+
+        DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager()
+                .findFragmentById(R.layout.details);
+
+
+        if(detailsFragment == null){
+
+            DetailsFragment onePaneFragment = new DetailsFragment();
+
+            Bundle args = new Bundle();
+            args.putInt(DetailsFragment.ARG_POSITION, position);
+            onePaneFragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, onePaneFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+
+        }else{
+
+            detailsFragment.updateDetailsView(position);
+        }
+
+
+    }
 
 }
 
-
-//        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//
-//        LocationListener locationListener = new LocationListener() {
-//            public void onLocationChanged(Location location) {
-//                // Called when a new location is found by the network location provider.
-//                makeUseOfNewLocation(location);
-//            }
-//
-//            public void onStatusChanged(String provider, int status, Bundle extras) {}
-//
-//            public void onProviderEnabled(String provider) {}
-//
-//            public void onProviderDisabled(String provider) {}
-//        };
-//        try {
-//            makeUseOfNewLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-//
-//
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-//
-//        } catch(IllegalArgumentException e) {
-//            Log.e("shit", "not working eh");
-//            return;
-//        }

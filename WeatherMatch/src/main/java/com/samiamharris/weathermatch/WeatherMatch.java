@@ -1,5 +1,6 @@
 package com.samiamharris.weathermatch;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.location.Location;
@@ -40,6 +41,8 @@ public class WeatherMatch extends Fragment implements LocationListener{
     WeatherData[] weatherArray = {};
     String currentLoc;
     LocationManager mLocationManager;
+    OnDaySelectedListener mCallback;
+
 
 
     @Override
@@ -177,6 +180,59 @@ public class WeatherMatch extends Fragment implements LocationListener{
 
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //making the fragment
+        Fragment f = getFragmentManager().findFragmentById(R.layout.details);
+        //assigning list view to v
+        ListView v = mListView;
+        //making sure neither are null
+        if(f != null && v != null){
+            //something to do with the clicking on. Can only select one, instead of multiple
+            v.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
+    }
+
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        //making sure the onHeadlineselected listener interface was implemented
+        //attempt to run this code
+        try{
+            mCallback = (OnDaySelectedListener) activity;
+        }
+        //if this type of exception pops up
+        catch (ClassCastException e){
+            //tell you in the log why it failed. That this interface was not implemented
+            throw new ClassCastException(activity.toString() +
+                    "must implement OnHeadSelectedListener");
+        }
+    }
+
+    public void onListItemClick(ListView l, View v, int position, long id) {
+
+        //setting the mcallback position once the article is selected
+        mCallback.onDaySelected(position);
+        //setting the item checked - meaning it has been clicked on so can't keep clicking
+        l.setItemChecked(position, true);
+
+    }
+
+    public interface OnDaySelectedListener {
+        /** Called by Weather Match Fragment when a list item is selected */
+        public void onDaySelected(int position);
+
+    }
+
+
 }
+
+
 
 
