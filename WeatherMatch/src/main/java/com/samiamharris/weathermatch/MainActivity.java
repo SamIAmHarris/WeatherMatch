@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
     }
 
 
-    public void onDaySelected(int position) {
+    public void onDaySelected(String dayData) {
         // The user selected the headline of an article from the HeadlinesFragment
 
         DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager()
@@ -69,7 +69,7 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
             DetailsFragment onePaneFragment = new DetailsFragment();
 
             Bundle args = new Bundle();
-            args.putInt(DetailsFragment.ARG_POSITION, position);
+            args.putString(DetailsFragment.JSON_Object, dayData);
             onePaneFragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
 
         }else{
 
-            detailsFragment.updateDetailsView(position);
+            detailsFragment.updateDetailsView(dayData);
         }
 
 

@@ -12,6 +12,9 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by samharris on 12/3/13.
  */
@@ -24,7 +27,13 @@ public class DetailsFragment extends Fragment {
     TextView mDetHighTemp;
     TextView mDetLowTemp;
     ImageView mDetEmoji;
-    final static String ARG_POSITION = "position";
+    JSONObject mData;
+
+    String dataToSave;
+
+    WeatherData mWeather = new WeatherData();
+
+    final static String JSON_Object = "object";
     int mCurrentPosition = -1;
 
     @Override
@@ -45,13 +54,13 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //making sure that there is not a pre-existing state. Like the screen was just flipped sideways
         if(savedInstanceState !=null) {
             //setting the current position to that saved instance state. so that if there was a previous state
             //we will know what its position was and that will be passed further down in the code
-            mCurrentPosition = savedInstanceState.getInt((ARG_POSITION));
+
+            dataToSave = savedInstanceState.getString((JSON_Object));
          }
-        //inflating the view for this fragment. the layout article_fragment
+
         View thisFragmentView = inflater.inflate(R.layout.details, container, false);
 
         //then returning that inflated view. These last two lines of code will run regardless of if. Method inflates the fragment
@@ -66,23 +75,47 @@ public class DetailsFragment extends Fragment {
         Bundle args = getArguments();
         //if there was a previous state then set the view to what that state was
         if(args!= null) {
-            updateDetailsView(args.getInt(ARG_POSITION));
-        } else if(mCurrentPosition != -1){
-            updateDetailsView(mCurrentPosition);
+            //PROBLEM HERE
+            updateDetailsView(args.getString(JSON_Object));
+        } else if(dataToSave != null){
+            updateDetailsView("");
         }
     }
 
-    public void updateDetailsView(int position) {
+    public void updateDetailsView(String dayData) {
         //getting called by the onStart method
         //returns the fragments root view
+        dataToSave = dayData;
         View v = getView();
 
-        //typecast the view v to a text view type
-        TextView articleView = (TextView) v;
-        //actually bring in the text we have for the article. filling with the data
-        articleView.setText(Ipsum.Articles[position]);
-        //setting the current position to what was passed in. so the current position reflects the current view
-        mCurrentPosition = position;
+        try {
+        mData = new JSONObject(dayData);
+
+
+            mWeather.setmDay(mData.getInt("time"));
+            mWeather.setmHighTemp(mData.getInt("temperatureMax"));
+            mWeather.setmLowTemp(mData.getInt("temperatureMin"));
+            mWeather.setmIcon(mData.getString("icon"));
+
+
+        } catch (JSONException j) {
+
+        }
+
+
+        TextView mDetDay = (TextView) v.findViewById(R.id.detday);
+        TextView mDetHighTemp = (TextView) v.findViewById(R.id.detHighTemp);
+        TextView mDetLowTemp = (TextView) v.findViewById(R.id.detLowTemp);
+        ImageView mDetEmoji = (ImageView) v.findViewById(R.id.detEmoji);
+
+
+
+        mDetDay.setText(mWeather.simpleDay(mWeather.getmDay()));
+        mDetHighTemp.setText((String.valueOf(mWeather.getmHighTemp()))+ "°");
+        mDetLowTemp.setText((String.valueOf(mWeather.getmLowTemp()))+ "°");
+
+        int resId = getActivity().getResources().getIdentifier(mWeather.getEmoji(mWeather.getmIcon()), "drawable", getActivity().getPackageName());
+        mDetEmoji.setImageResource(resId);
 
     }
 
@@ -90,9 +123,6 @@ public class DetailsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-
-        //making this bundle object the current position when the state was saved. So that
-        //when the view gets created after being destroyed it will have a saved instance state
-        outState.putInt(ARG_POSITION, mCurrentPosition);
+        outState.putString(JSON_Object, dataToSave);
     }
 }

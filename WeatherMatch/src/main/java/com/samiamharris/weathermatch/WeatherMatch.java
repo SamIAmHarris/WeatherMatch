@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,17 +34,18 @@ import org.json.JSONObject;
  * Created by samharris on 11/25/13.
  */
 
-public class WeatherMatch extends Fragment implements LocationListener{
+public class WeatherMatch extends ListFragment implements LocationListener{
 
     public String initialURL = "https://api.forecast.io/forecast/1c427d26fbc53060aef944ad30201adf/";
 
-    ListView mListView;
     WeatherAdapter mWeatherAdapter;
     WeatherData[] weatherArray = {};
     String currentLoc;
     LocationManager mLocationManager;
     OnDaySelectedListener mCallback;
 
+    JSONArray dataJSON;
+    JSONObject day;
 
 
     @Override
@@ -88,6 +90,10 @@ public class WeatherMatch extends Fragment implements LocationListener{
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
+
+        setListAdapter(mWeatherAdapter);
+
         return rootView;
     }
 
@@ -96,13 +102,6 @@ public class WeatherMatch extends Fragment implements LocationListener{
         super.onViewCreated(view, savedInstanceState);
 
 
-        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
-
-        mListView = (ListView) getView().findViewById(R.id.list_view);
-        if(mListView != null) {
-            mListView.setOnItemClickListener(mOnClickListener);
-            mListView.setAdapter(mWeatherAdapter);
-        }
     }
 
     public void getData() {
@@ -119,13 +118,13 @@ public class WeatherMatch extends Fragment implements LocationListener{
 
 
                     JSONObject dailyJSON = response.getJSONObject("daily");
-                    JSONArray dataJSON = dailyJSON.getJSONArray("data");
+                    dataJSON = dailyJSON.getJSONArray("data");
 
                     weatherArray = new WeatherData[dataJSON.length()];
 
 
                     for (int i = 0; i <dataJSON.length(); i++) {
-                        JSONObject day = dataJSON.getJSONObject(i);
+                        day = dataJSON.getJSONObject(i);
                         WeatherData weatherObject = new WeatherData();
                         weatherObject.mLowTemp = day.getInt("temperatureMin");
                         weatherObject.mHighTemp = day.getInt("temperatureMax");
@@ -183,21 +182,6 @@ public class WeatherMatch extends Fragment implements LocationListener{
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        //making the fragment
-        Fragment f = getFragmentManager().findFragmentById(R.layout.details);
-        //assigning list view to v
-        ListView v = mListView;
-        //making sure neither are null
-        if(f != null && v != null){
-            //something to do with the clicking on. Can only select one, instead of multiple
-            v.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
-    }
-
 
 
     @Override
@@ -217,21 +201,22 @@ public class WeatherMatch extends Fragment implements LocationListener{
         }
     }
 
-    final private AdapterView.OnItemClickListener mOnClickListener = new AdapterView.OnItemClickListener() {
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
 
-        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-            //setting the mcallback position once the article is selected
-            mCallback.onDaySelected(position);
-            //setting the item checked - meaning it has been clicked on so can't keep clicking
-            mListView.setItemChecked(position, true);
+        try {
+            String dayData = dataJSON.get(position).toString();
+            mCallback.onDaySelected(dayData);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-    };
-
+    }
 
 
     public interface OnDaySelectedListener {
         /** Called by Weather Match Fragment when a list item is selected */
-        public void onDaySelected(int position);
+        public void onDaySelected(String dayData);
 
     }
 

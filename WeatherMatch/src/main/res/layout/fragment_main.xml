@@ -4,13 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
+    <ListView android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_view">
-
-
-    </ListView>
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>
