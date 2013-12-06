@@ -3,6 +3,7 @@ package com.samiamharris.weathermatch;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -84,23 +85,30 @@ public class WeatherMatch extends ListFragment implements LocationListener{
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
-
-        setListAdapter(mWeatherAdapter);
-
-        return rootView;
-    }
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//
+////         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+////
+////        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
+////
+////        setListAdapter(mWeatherAdapter);
+////
+////          return rootView;
+//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+//        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
+
+        setListAdapter(mWeatherAdapter);
+
+//        return rootView;
 
     }
 
@@ -138,7 +146,6 @@ public class WeatherMatch extends ListFragment implements LocationListener{
                 }catch(JSONException e) {
 
                 }
-                //data parsed
                 mWeatherAdapter.setData(weatherArray);
 
 
@@ -188,14 +195,10 @@ public class WeatherMatch extends ListFragment implements LocationListener{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        //making sure the onHeadlineselected listener interface was implemented
-        //attempt to run this code
         try{
             mCallback = (OnDaySelectedListener) activity;
         }
-        //if this type of exception pops up
         catch (ClassCastException e){
-            //tell you in the log why it failed. That this interface was not implemented
             throw new ClassCastException(activity.toString() +
                     "must implement OnDaySelectedListener");
         }
@@ -219,7 +222,6 @@ public class WeatherMatch extends ListFragment implements LocationListener{
         public void onDaySelected(String dayData);
 
     }
-
 
 }
 

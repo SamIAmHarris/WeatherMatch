@@ -1,5 +1,7 @@
 package com.samiamharris.weathermatch;
 
+import android.app.IntentService;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -33,22 +35,21 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
                     .commit();
 
         }
+
+        Intent i = new Intent(this,WaitService.class);
+        startService(i);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -58,7 +59,6 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
 
 
     public void onDaySelected(String dayData) {
-        // The user selected the headline of an article from the HeadlinesFragment
 
         DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager()
                 .findFragmentById(R.layout.details);
