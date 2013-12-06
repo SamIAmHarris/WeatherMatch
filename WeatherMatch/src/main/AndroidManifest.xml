@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <service android:name=".WaitService" />
+        <service android:name=".BackgroundService" />
 
         <activity
             android:name="com.samiamharris.weathermatch.MainActivity"

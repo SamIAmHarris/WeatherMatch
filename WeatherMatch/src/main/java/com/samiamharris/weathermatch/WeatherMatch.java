@@ -89,26 +89,26 @@ public class WeatherMatch extends ListFragment implements LocationListener{
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 //                             Bundle savedInstanceState) {
 //
-////         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-////
-////        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
-////
-////        setListAdapter(mWeatherAdapter);
-////
-////          return rootView;
-//    }
+//         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+//
+//        mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
+//
+//        setListAdapter(mWeatherAdapter);
+//
+//          return rootView;
+//       }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+       // View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mWeatherAdapter = new WeatherAdapter(getActivity().getApplicationContext(), R.layout.row, weatherArray);
 
         setListAdapter(mWeatherAdapter);
 
-//        return rootView;
+     //   return rootView;
 
     }
 

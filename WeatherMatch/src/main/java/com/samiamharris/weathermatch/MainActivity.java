@@ -36,8 +36,9 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
 
         }
 
-        Intent i = new Intent(this,WaitService.class);
-        startService(i);
+
+
+
     }
 
 
@@ -86,5 +87,11 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent j = new Intent(this, BackgroundService.class);
+        startService(j);
+    }
 }
 
