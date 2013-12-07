@@ -33,9 +33,13 @@ public class BackgroundService extends Service {
                     } catch (Exception e) {
                     }
                 }
+
             }
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
+
+            Notification n = new Notification(getApplicationContext());
+
             stopSelf(msg.arg1);
         }
     }
@@ -57,6 +61,7 @@ public class BackgroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+
 
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
