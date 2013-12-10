@@ -1,19 +1,12 @@
 package com.samiamharris.weathermatch;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
-public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDaySelectedListener{
+public class WeatherActivity extends ActionBarActivity implements WeatherMatch.OnDaySelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +54,16 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
 
     public void onDaySelected(String dayData) {
 
-        DetailsFragment detailsFragment = (DetailsFragment) getSupportFragmentManager()
+        WeatherDetailFragment detailsFragment = (WeatherDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.layout.details);
 
 
         if(detailsFragment == null){
 
-            DetailsFragment onePaneFragment = new DetailsFragment();
+            WeatherDetailFragment onePaneFragment = new WeatherDetailFragment();
 
             Bundle args = new Bundle();
-            args.putString(DetailsFragment.JSON_Object, dayData);
+            args.putString(WeatherDetailFragment.JSON_Object, dayData);
             onePaneFragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
@@ -90,7 +83,7 @@ public class MainActivity extends ActionBarActivity implements WeatherMatch.OnDa
     @Override
     protected void onStop() {
         super.onStop();
-        Intent j = new Intent(this, BackgroundService.class);
+        Intent j = new Intent(this, WeatherUpdateService.class);
         startService(j);
     }
 }

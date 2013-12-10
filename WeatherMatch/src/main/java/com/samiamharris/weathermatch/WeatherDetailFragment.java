@@ -18,7 +18,7 @@ import org.json.JSONObject;
 /**
  * Created by samharris on 12/3/13.
  */
-public class DetailsFragment extends Fragment {
+public class WeatherDetailFragment extends Fragment {
 
     String Details_URL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=great%20dogs";
     NetworkImageView mNetworkImageView;

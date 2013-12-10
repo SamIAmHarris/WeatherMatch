@@ -12,7 +12,7 @@ import android.widget.Toast;
 /**
  * Created by samharris on 12/6/13.
  */
-public class BackgroundService extends Service {
+public class WeatherUpdateService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
 
