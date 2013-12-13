@@ -2,11 +2,16 @@ package com.samiamharris.weathermatch;
 
 import android.app.Service;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -15,6 +20,24 @@ import android.widget.Toast;
 public class WeatherUpdateService extends Service {
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
+    DataManager mDataManager;
+
+    public WeatherUpdateService() {
+        mDataManager = new DataManager(this);
+
+    }
+
+
+    //Will call this when we think the data is ready to send
+    public void sendDataToActivity(String myData)
+    {
+        Intent intent = new Intent();
+        intent.setAction("com.samiamharris.weathermatch.CUSTOM_INTENT");
+        intent.putExtra("MyData", myData);
+        sendBroadcast(intent);
+        Log.e("tres amigos", "Send Broadcast");
+
+    }
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -25,16 +48,24 @@ public class WeatherUpdateService extends Service {
         public void handleMessage(Message msg) {
             // Normally we would do some work here, like download a file.
             // For our sample, we just sleep for 5 seconds.
-            long endTime = System.currentTimeMillis() + 5*1000;
-            while (System.currentTimeMillis() < endTime) {
+
+
+
                 synchronized (this) {
-                    try {
-                        wait(endTime - System.currentTimeMillis());
-                    } catch (Exception e) {
+
+                    Bundle extras = msg.getData();
+
+                    if (extras != null) {
+                        boolean value = extras.getBoolean("UPDATEREQUEST");
+
+                        if (value == true) {
+                            sendDataToActivity("Stuff man");
+                        }
+
+
                     }
                 }
 
-            }
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
 
@@ -43,6 +74,7 @@ public class WeatherUpdateService extends Service {
             stopSelf(msg.arg1);
         }
     }
+
 
     @Override
     public void onCreate() {
@@ -63,10 +95,16 @@ public class WeatherUpdateService extends Service {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 
 
+
+
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
+        msg.setData(intent.getExtras());
+
+
+        //Do work in here
         mServiceHandler.sendMessage(msg);
 
         // If we get killed, after returning from here, restart

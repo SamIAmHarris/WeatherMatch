@@ -14,8 +14,7 @@ public class WeatherData {
     int mDay;
     String mIcon;
 
-    public WeatherData() {
-    }
+    NetworkImageRequest mNetworkImageRequest;
 
     public WeatherData(int mLowTemp, int mHighTemp, int mDate, int mDay, String mIcon) {
         this.mLowTemp = mLowTemp;
@@ -23,7 +22,18 @@ public class WeatherData {
         this.mDate = mDate;
         this.mDay = mDay;
         this.mIcon = mIcon;
+
+        mNetworkImageRequest = new NetworkImageRequest(this);
+
     }
+
+    public void onReceiveNetworkImage () {
+
+
+
+    }
+
+
 
     public int getmLowTemp() {
         return mLowTemp;

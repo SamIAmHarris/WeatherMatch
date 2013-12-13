@@ -1,12 +1,20 @@
 package com.samiamharris.weathermatch;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-public class WeatherActivity extends ActionBarActivity implements WeatherMatch.OnDaySelectedListener{
+public class WeatherActivity extends ActionBarActivity implements WeatherListFragment.OnDaySelectedListener{
+
+    //1. create member variable
+    DataListener mDataListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +26,7 @@ public class WeatherActivity extends ActionBarActivity implements WeatherMatch.O
                 return;
             }
 
-            WeatherMatch weatherMatchFragment = new WeatherMatch();
+            WeatherListFragment weatherMatchFragment = new WeatherListFragment();
             weatherMatchFragment.setArguments(getIntent().getExtras());
 
 
@@ -28,9 +36,28 @@ public class WeatherActivity extends ActionBarActivity implements WeatherMatch.O
                     .commit();
 
         }
+        //2. instantiate that variable
+        mDataListener = new DataListener(this);
+
+        Intent wUSIntent = new Intent(this, WeatherUpdateService.class);
+        startService(wUSIntent);
+        Log.e("tres amigos", "Start Intent");
+
+        requestUpdateFromService();
+    }
 
 
+    public void requestUpdateFromService() {
 
+        Intent updateIntent = new Intent(this, WeatherUpdateService.class);
+        updateIntent.putExtra("UPDATEREQUEST", true);
+        startService(updateIntent);
+        Log.e("tres amigos", "Update sent");
+    }
+
+    public void onDataReceive(String data){
+        //do something with this data which is passed from the weather update service
+        Log.e("tres amigos", "Broadcast Receiver");
 
     }
 
@@ -83,8 +110,21 @@ public class WeatherActivity extends ActionBarActivity implements WeatherMatch.O
     @Override
     protected void onStop() {
         super.onStop();
-        Intent j = new Intent(this, WeatherUpdateService.class);
-        startService(j);
+
+    }
+
+    //4. unregister the receiver to listen for data
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mDataListener);
+    }
+
+    //3. register the receiver to listen for data
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mDataListener, new IntentFilter("com.samiamharris.weathermatch.CUSTOM_INTENT"));
     }
 }
 

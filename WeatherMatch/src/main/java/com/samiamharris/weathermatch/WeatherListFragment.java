@@ -35,7 +35,7 @@ import org.json.JSONObject;
  * Created by samharris on 11/25/13.
  */
 
-public class WeatherMatch extends ListFragment implements LocationListener{
+public class WeatherListFragment extends ListFragment implements LocationListener{
 
     public String initialURL = "https://api.forecast.io/forecast/1c427d26fbc53060aef944ad30201adf/";
 
@@ -70,7 +70,7 @@ public class WeatherMatch extends ListFragment implements LocationListener{
 
     }
 
-    public WeatherMatch() {
+    public WeatherListFragment() {
     }
 
     @Override

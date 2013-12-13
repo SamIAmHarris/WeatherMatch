@@ -17,15 +17,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <service android:name=".WeatherUpdateService" />
+        <service android:name="com.samiamharris.weathermatch.WeatherUpdateService" />
 
         <activity
-            android:name=".WeatherActivity"
+            android:name="com.samiamharris.weathermatch.WeatherActivity"
             android:label="@string/app_name" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
