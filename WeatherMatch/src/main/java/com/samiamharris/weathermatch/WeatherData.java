@@ -1,12 +1,15 @@
 package com.samiamharris.weathermatch;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by samharris on 11/25/13.
  */
-public class WeatherData {
+public class WeatherData implements Parcelable{
 
     int mLowTemp;
     int mHighTemp;
@@ -15,6 +18,11 @@ public class WeatherData {
     String mIcon;
 
     NetworkImageRequest mNetworkImageRequest;
+
+    public WeatherData() {
+
+        this(0,0,0,0, "notcloud");
+    }
 
     public WeatherData(int mLowTemp, int mHighTemp, int mDate, int mDay, String mIcon) {
         this.mLowTemp = mLowTemp;
@@ -29,11 +37,24 @@ public class WeatherData {
 
     public void onReceiveNetworkImage () {
 
-
-
     }
 
 
+    @Override
+    public int describeContents() {
+
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mLowTemp);
+        dest.writeInt(mHighTemp);
+        dest.writeInt(mDate);
+        dest.writeInt(mDay);
+        dest.writeString(mIcon);
+
+    }
 
     public int getmLowTemp() {
         return mLowTemp;

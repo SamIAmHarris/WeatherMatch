@@ -17,12 +17,14 @@ import org.json.JSONObject;
 public class DataManager {
 
     ForecastRequest mForecastRequest;
-
     WeatherUpdateService mWeatherUpdateService;
+    LocationManager mLocationManager;
 
     public DataManager(WeatherUpdateService weatherUpdateService) {
 
         mWeatherUpdateService = weatherUpdateService;
+        mLocationManager = new LocationManager();
+
 
     }
 
@@ -31,7 +33,12 @@ public class DataManager {
 
     }
 
-    public void OnReceiveForecast() {
+    public void onReceiveForecast() {
+
+
+    }
+
+    public void onLocationreceived() {
 
 
     }
@@ -41,5 +48,27 @@ public class DataManager {
     //notification Sending
     //Receive Data
 
+    private class LocationManager implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+        onLocationreceived();
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
 
 }
